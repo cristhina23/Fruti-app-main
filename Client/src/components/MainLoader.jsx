@@ -3,8 +3,10 @@ import '../assets/css/Loader.css';
 
 const MainLoader = () => {
   return (
-    <div class="custom-loader"></div>
+    <div className="custom-loader"></div>
   )
 }
 
 export default MainLoader
+
+// en 2:30 esta la creacion de loading

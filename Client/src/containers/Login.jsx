@@ -7,7 +7,7 @@ import { buttonClick } from '../animations';
 import { FcGoogle } from 'react-icons/fc';
 import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import {app} from '../config/firebase.config.js'
-import { validateUserJWTToken } from '../api';
+import { validateUserJWTToken,  } from '../api';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserDetails } from '../context/actions/userActions';
@@ -40,9 +40,10 @@ const Login = () => {
       firebaseAuth.onAuthStateChanged((cred) => {
         if (cred) {
           cred.getIdToken().then((token) => {
+            
             validateUserJWTToken(token).then(data => {
-              console.log(data);
-              dispatch(setUserDetails(data));
+            
+              dispatch(setUserDetails(user));
             });
             navigate('/', { replace: true });
           });
@@ -73,7 +74,7 @@ const Login = () => {
         });
         
       } else {
-         dispatch(toast.info('All fields are required'));
+         dispatch(toast.info('Passwords does not match'));
       }
     }
   };

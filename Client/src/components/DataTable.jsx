@@ -1,40 +1,34 @@
 import React from 'react';
-import MaterialTable from 'material-table';
-import { ThemeProvider, createTheme } from '@mui/material';
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-
-const DataTable = ({ columns, data, actions, title }) => {
+const DataTable = ({ columns, data, title }) => {
   const defaultMaterialTheme = createTheme();
+
+  const table = useMaterialReactTable({
+    columns,
+    data,
+    enableRowActions: true,
+    renderRowActions: ({ row }) => (
+      <button
+        onClick={() => alert(`You saved ${row.original.name}`)}
+        style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', borderRadius: '5px' }}
+      >
+        Delete
+      </button>
+    ),
+  });
+
   return (
-    <div className='flex items-center justify-self-center gap-2 pt-6 w-full'>
+    <div className="flex items-center justify-center gap-2 pt-6 w-full">
       <ThemeProvider theme={defaultMaterialTheme}>
-        <MaterialTable
-          title="Simple Action Preview"
-          columns={[
-            { title: 'Name', field: 'name' },
-            { title: 'Surname', field: 'surname' },
-            { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
-            {
-              title: 'Birth Place',
-              field: 'birthCity',
-              lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
-            },
-          ]}
-          data={[
-            { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-            { name: 'Zerya Betül', surname: 'Baran', birthYear: 2017, birthCity: 34 },
-          ]}
-          actions={[
-            {
-              icon: 'delete',
-              tooltip: 'Save User',
-              onClick: (event, rowData) => alert("You saved " + rowData.name)
-            }
-          ]}
-        />
+        <MaterialReactTable table={table} />
       </ThemeProvider>
     </div>
-  )
-}
+  );
+};
 
-export default DataTable
+export default DataTable;

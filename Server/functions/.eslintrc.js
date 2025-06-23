@@ -4,16 +4,19 @@ module.exports = {
     node: true,
   },
   parserOptions: {
-    "ecmaVersion": 2018,
+    ecmaVersion: 2018,
   },
   extends: [
-    "eslint:recommended",
-    "google",
+    "eslint:recommended"
+    // Quitamos "google" para evitar reglas de estilo estrictas
   ],
   rules: {
-    "no-restricted-globals": ["error", "name", "length"],
-    "prefer-arrow-callback": "error",
-    "quotes": ["error", "double", {"allowTemplateLiterals": true}],
+    quotes: "off", // No marcar errores por comillas
+    "prefer-arrow-callback": "off",
+    "no-restricted-globals": "off",
+    semi: "off",
+    "no-unused-vars": "off",
+    "no-console": "off"
   },
   overrides: [
     {

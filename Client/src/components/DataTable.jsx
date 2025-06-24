@@ -3,31 +3,42 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from 'material-react-table';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import {
+  ThemeProvider,
+  createTheme,
+  IconButton,
+  Tooltip,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete'; // ✅ Import correcto
 
-const DataTable = ({ columns, data, title }) => {
-  const defaultMaterialTheme = createTheme();
+const DataTable = ({ columns, data, title, onDelete }) => {
+  const actionColumn = {
+    accessorKey: 'actions',
+    header: '',
+    size: 40,
+    enableSorting: false,
+    enableColumnFilter: false,
+    Cell: ({ row }) => ( // ✅ Aquí se define correctamente "row"
+      <Tooltip title="Delete">
+        <IconButton onClick={() => onDelete(row.original)} color="error">
+          <DeleteIcon /> {/* ✅ Icono sí está definido */}
+        </IconButton>
+      </Tooltip>
+    ),
+  };
 
   const table = useMaterialReactTable({
-    columns,
+    columns: [actionColumn, ...columns], // ✅ Agrega columna al inicio
     data,
-    enableRowActions: true,
-    renderRowActions: ({ row }) => (
-      <button
-        onClick={() => alert(`You saved ${row.original.name}`)}
-        style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', borderRadius: '5px' }}
-      >
-        Delete
-      </button>
+    renderTopToolbarCustomActions: () => (
+      <div className="px-4 py-2 text-lg font-semibold">{title}</div>
     ),
   });
 
   return (
-    <div className="flex items-center justify-center gap-2 pt-6 w-full">
-      <ThemeProvider theme={defaultMaterialTheme}>
-        <MaterialReactTable table={table} />
-      </ThemeProvider>
-    </div>
+    <ThemeProvider theme={createTheme()}>
+      <MaterialReactTable table={table} />
+    </ThemeProvider>
   );
 };
 

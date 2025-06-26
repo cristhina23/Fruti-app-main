@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import { statuses } from '../utils/styles';
 import Spiner from '../components/Spiner';
 import { FaCloudUploadAlt } from 'react-icons/fa';
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { MdDelete } from 'react-icons/md';
 import { alertDanger, alertNull, alertSuccess } from '../context/actions/alertActions';
 import { buttonClick } from '../animations/index.js';
+import { addNewProduct, getAllProducts } from '../api/index.js';
+import { setAllProducts } from '../context/actions/productActions.js';
 
 const DBNewItem = () => {
   const [itenName, setItenName] = useState('');
@@ -43,8 +45,9 @@ const DBNewItem = () => {
           setImageDownloadURL(downloadURL);
           setIsLoading(false);
           setProgress(null);
+          dispatch(alertSuccess('Image Uploaded Successfully'));
           setTimeout(() => {
-            dispatch(alertSuccess('Image Uploaded Successfully'));
+            dispatch(alertNull());
           }, 3000);
         })
       }
@@ -52,8 +55,41 @@ const DBNewItem = () => {
   };
 
   const deleteImageFromFirebase = () => {
-    
+    setIsLoading(true);
+    const deleteRef = ref(getStorage(), imageDownloadURL);
+
+    deleteObject(deleteRef).then(() => {
+      setImageDownloadURL(null);
+      setIsLoading(false);
+      dispatch(alertSuccess('Image Deleted Successfully'));
+      setTimeout(() => {
+        dispatch(alertNull());
+      }, 3000);
+    })
   }
+
+  const submitNewData = () => {
+    const data = {
+      product_name: itenName,
+      product_category: category,
+      product_price: price,
+      product_image: imageDownloadURL
+    };
+    addNewProduct(data).then(res => {
+      dispatch(alertSuccess('New Product Added Successfully'));
+      setTimeout(() => {
+        dispatch(alertNull());
+      }, 3000);
+      setImageDownloadURL(null);
+      setItenName('');
+      setCategory(null);
+      setPrice('');
+    });
+    getAllProducts().then(data => {
+      console.log(data);
+      dispatch(setAllProducts(data));
+    });
+  };
 
   return (
     <div className='flex flex-col items-center justify-center pt-6 px-24 w-full'>
@@ -88,9 +124,28 @@ const DBNewItem = () => {
           {isLoading ? (<>
             <div className='w-full h-full flex justify-evenly items-center px-24'>
               <Spiner />
-              {progress}
             </div>
+              {Math.round(progress) > 0 && (
+                <div className='w-full flex flex-col items-center justify-center gap-2'>
+                  <div className='flex justify-between w-full' >
+                    <span className='text-base font-medium text-textColor'>Progress</span>
+                    <span className='text-sm font-medium text-textColor'>
+                      
+                      {Math.round(progress) > 0 && (
+                        <>{`${Math.round(progress)}%`} </>
+                      )}
+                    </span>
+                  </div>
 
+                  <div className='w-full h-2.5 rounded-full bg-gray-200'>
+                    <div className='bg-red-600 h-2.5 rounded-full transition-all duration-500 e ease-in-out' style={{ width: `${Math.round(progress)}%` }}>
+
+                    </div>
+                    
+                    </div>    
+                </div>
+              )}
+          
           </>) : (
             <>
               {!imageDownloadURL ? (
@@ -138,6 +193,13 @@ const DBNewItem = () => {
               )}
             </>)}
         </div>
+        <motion.button
+        onClick={submitNewData}
+        {...buttonClick}
+        className='w-9/12 py-2 rounded-md bg-red-400 text-primary hover:bg-red-600 cursor-pointer outline-none'
+        >
+          Save
+        </motion.button>
       </div>
     </div>
   )

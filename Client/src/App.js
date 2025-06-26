@@ -15,6 +15,9 @@ import MainLoader from './components/MainLoader';
 import Loader from './assets/css/285.gif';
 import Alert from './components/Alert';
 import Dashboard from './containers/Dashboard';
+import { getAllProducts } from './api';
+import { setAllProducts } from './context/actions/productActions';
+
 
 
 
@@ -22,6 +25,8 @@ function App() {
   const firebasAuth = getAuth(app);
   const [isLoading, setIsLoading] = useState(false);
   const alert = useSelector((state) => state.alert);
+  const products = useSelector((state) => state.products);
+
 
   const dispatch = useDispatch();
 
@@ -40,6 +45,15 @@ function App() {
       }, 2000);
     });
   }, []);
+
+  useEffect(() => {
+  if (!products || products.length === 0) {
+    getAllProducts().then((data) => {
+      dispatch(setAllProducts(data));
+    });
+  }
+}, [dispatch, products]);
+
 
   return (
 

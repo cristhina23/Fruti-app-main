@@ -7,12 +7,12 @@ const serviceAccountKey = require("./serviceAccountKey.json");
 const express = require("express");
 const app = express();
 
-// Body parser for our  JSON data
+// Body parser for our JSON data
 app.use(express.json());
 
 // cross origin
 const cors = require("cors");
-app.use(cors({origin: true}));
+app.use(cors({ origin: true }));
 app.use((req, res, next) => {
   res.set("Access-Control-Allow-Origin", "*");
   next();
@@ -31,4 +31,9 @@ app.get("/", (req, res) => {
 const userRoute = require("./routes/user");
 app.use("/api/users", userRoute);
 
+
+const productRoute = require("./routes/products");
+app.use("/api/products", productRoute);
+
+// export the app
 exports.app = functions.https.onRequest(app);

@@ -14,3 +14,9 @@ export { default as DBOrders } from '../components/DBOrders';
 export { default as DBUsers } from '../components/DBUsers';
 export { default as DataTable } from '../components/DataTable';
 export { default as Spiner } from '../components/Spiner';
+export { default as Home } from '../components/Home';
+export { default as HomeSlider } from '../components/HomeSlider';
+export { default as Slider } from '../components/Slider';
+export { default as SliderCard } from '../components/SliderCard';
+export { default as FilterSection } from '../components/FilterSection';
+

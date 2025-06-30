@@ -56,3 +56,24 @@ export const getAllUsers = async () => {
   }
 }
 
+export const AddNewItemToCart = async (userId, data) => {
+  try {
+    const res = await axios.post(`${baseURL}/api/products/addToCart/${userId}`, { ...data });
+    console.log("Respuesta del servidor:", res.data);
+    return res.data.data;
+  } catch (error) {
+    return null;
+  }
+}
+
+// get all the cart Items
+
+export const getAllCartItems = async (user_id) => {
+  try {
+    const res = await axios.get(`${baseURL}/api/products/getCartItems/${user_id}`);
+    
+    return res.data.data;
+  } catch (error) {
+    return null;
+  }
+}

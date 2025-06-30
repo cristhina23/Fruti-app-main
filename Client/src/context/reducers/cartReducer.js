@@ -4,7 +4,7 @@ const cartReducer = (state = { cartItems: [] }, action) => {
       return state;
 
     case "SET_CART_ITEMS":
-      return { ...state, cartItems: action.items };
+  return { ...state, cartItems: Array.isArray(action.payload) ? [...action.payload] : [] };
 
     case "CLEAR_CART_ITEMS":
       return { ...state, cartItems: [] };

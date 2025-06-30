@@ -7,7 +7,7 @@ import Login from './containers/Login';
 import { app } from './config/firebase.config';
 import { getAuth } from 'firebase/auth';
 
-import { validateUserJWTToken } from './api';
+import { getAllCartItems, validateUserJWTToken } from './api';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserDetails } from './context/actions/userActions';
 import { fadeInOut } from './animations';
@@ -17,6 +17,7 @@ import Alert from './components/Alert';
 import Dashboard from './containers/Dashboard';
 import { getAllProducts } from './api';
 import { setAllProducts } from './context/actions/productActions';
+import { setCartItems } from './context/actions/cartActions';
 
 
 
@@ -30,21 +31,31 @@ function App() {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    setIsLoading(true);
-    firebasAuth.onAuthStateChanged((cred) => {
-      if (cred) {
-        cred.getIdToken().then((token) => {
-          validateUserJWTToken(token).then((data) => {
+useEffect(() => {
+  setIsLoading(true);
+
+  firebasAuth.onAuthStateChanged((cred) => {
+    if (cred) {
+      cred.getIdToken().then((token) => {
+        validateUserJWTToken(token).then(async (data) => {
+          if (data) {
             dispatch(setUserDetails(data));
-          });
+
+            const items = await getAllCartItems(data.user_id);
+            dispatch(setCartItems(items)); 
+          }
+
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 2000);
         });
-      }
-      setInterval(() => {
-        setIsLoading(false);
-      }, 2000);
-    });
-  }, []);
+      });
+    } else {
+      setIsLoading(false);
+    }
+  });
+}, []);
+
 
   useEffect(() => {
   if (!products || products.length === 0) {

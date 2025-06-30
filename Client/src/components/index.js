@@ -19,4 +19,5 @@ export { default as HomeSlider } from '../components/HomeSlider';
 export { default as Slider } from '../components/Slider';
 export { default as SliderCard } from '../components/SliderCard';
 export { default as FilterSection } from '../components/FilterSection';
+export { default as Cart } from '../components/Cart';
 

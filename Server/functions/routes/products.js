@@ -98,26 +98,19 @@ router.post('/addToCart/:userId', async (req, res) => {
 router.get('/getCartItems/:user_id', async (req, res) => {
   const userId = req.params.user_id;
   try {
-    let query =  db
+    const query = db
       .collection('cartItems')
       .doc(`/${userId}/`)
-      .collection('items')
-      
-      let response = [];
+      .collection('items');
 
-      await query.get().then((querysnap) => {
-        let docs = querysnap.docs;
+    const querysnap = await query.get();
+    const response = querysnap.docs.map(doc => doc.data());
 
-        docs.map((doc) => {
-          response.push({...doc.data()});
-        });
-        return response;
-      })
-
-      return res.status(200).send({ success: true, data: response });
+    return res.status(200).send({ success: true, data: response });
   } catch (err) {
     return res.send({ success: false, msg: `Error in getting cart items: ${err}` });
   }
 });
+
 
 module.exports = router;

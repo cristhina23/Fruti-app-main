@@ -1,7 +1,7 @@
 export const setCartItems = (items) => {
   return {
     type: "SET_CART_ITEMS",
-    items: items,
+    payload: items,
   };
 };
 

@@ -11,10 +11,15 @@ import { isActiveStyles, isNoActiveStyles } from '../utils/styles';
 import { buttonClick, slideTop } from '../animations';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserDetails, setUserNull } from '../context/actions/userActions';
+import {setCartOn} from '../context/actions/displayCartAction';
+
 
 const Header = () => {
   const [isMenu, setIsMenu] = useState(false)
   const user = useSelector((state) => state.user);
+  const cart = useSelector((state) => state.cart.cartItems);
+  const isCart = useSelector((state) => state.isCart);
+
   const firebaseAuth = getAuth(app);
   const navigate = useNavigate();
   const provider = new GoogleAuthProvider();
@@ -30,6 +35,7 @@ const Header = () => {
       console.log(err);
     });
   };
+
 
   return (
     <header className='fixed backdrop-blur-md z-50 inset-x-0 top-0  w-screen  p-4 px-16 md:px-20 py-4'>
@@ -47,10 +53,15 @@ const Header = () => {
             <NavLink to='/services' className={({ isActive }) => isActive ? isActiveStyles : isNoActiveStyles}>Servives</NavLink>
           </ul>
 
-          <motion.div {...buttonClick} className='relative flex cursor-pointer'>
-            <HiShoppingCart className='text-2xl text-textColor ml-8 hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer' />
-            <div className='absolute -top-4 -right-2 bg-cartNumBg w-5 h-5 bg-cartNumBg rounded-full flex items-center justify-center text-xs text-white font-bold'><p className='text-xs font-semibold'>1</p>
-            </div>
+          <motion.div {...buttonClick} onClick={() => dispatch(setCartOn())} className='relative flex cursor-pointer'>
+            <HiShoppingCart className='text-3xl text-textColor ml-8 hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer' />
+
+            {cart?.length > 0 && (
+  <div className='absolute -top-4 -right-2 bg-cartNumBg w-5 h-5 rounded-full flex items-center justify-center text-xs text-white font-bold'>
+    {cart.length}
+  </div>
+)}
+            
           </motion.div>
 
           {user ? (

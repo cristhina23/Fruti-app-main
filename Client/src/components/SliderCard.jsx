@@ -7,6 +7,7 @@ import { addProduct } from '../context/actions/productActions';
 import { AddNewItemToCart } from '../api';
 import { alertSuccess, alertNull } from '../context/actions/alertActions';
 import { getAllCartItems } from '../api';
+import { setCartItems } from '../context/actions/cartActions';
 
 
 
@@ -15,16 +16,19 @@ const SliderCard = ({data, i}) => {
   const dispatch = useDispatch();
 
   const sendToCart = () => {
-    dispatch(alertSuccess('Producto agregado al carrito'));
-    AddNewItemToCart(user?.user_id, data).then((res) => 
-      
-      getAllCartItems(user?.user_id).then((items) => {
-        console.log(items);
-      }));
-      setTimeout(() => {
-        dispatch(alertNull());
-      }, 3000);
-  }
+  dispatch(alertSuccess('Producto agregado al carrito'));
+
+  AddNewItemToCart(user?.user_id, data).then((res) =>
+    getAllCartItems(user?.user_id).then((items) => {
+      console.log(items);
+      dispatch(setCartItems(items));
+    })
+  );
+
+  setTimeout(() => {
+    dispatch(alertNull());
+  }, 3000);
+};
   
   return (
     <div className='bg-lightOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center juctify-center relative gap-3 px-4 py-2 w-full md:w-340 md:min-w-350 '>

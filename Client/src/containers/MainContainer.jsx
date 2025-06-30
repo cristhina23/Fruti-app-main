@@ -3,8 +3,11 @@ import Header from '../components/Header'
 import  Home  from '../components/Home'
 import  HomeSlider  from '../components/HomeSlider'
 import  FilterSection  from '../components/FilterSection'
+import { useSelector } from 'react-redux'
+import Cart from '../components/Cart'
 
 const MainContainer = () => {
+  const isCart = useSelector((state) => state.isCart);
   return (
     <main className='w-screen min-h-screen flex items-start justify-center flex-col bg-primary'>
       <Header />
@@ -13,6 +16,8 @@ const MainContainer = () => {
         <HomeSlider />
         <FilterSection />
       </div>
+
+      {isCart && <Cart />}
     </main>
   )
 }

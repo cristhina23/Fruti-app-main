@@ -57,18 +57,18 @@ router.post('/addToCart/:userId', async (req, res) => {
   try {
     const doc = await db
     .collection('cartItems')
-    .doc(/${userId}/)
+    .doc(`/${userId}/`)
     .collection('items')
-    .doc(/${productId}/)
+    .doc(`/${productId}/`)
     .get();
 
     if (doc.exists) {
       const quantity = doc.data().quantity + 1;
       const updatedItem = await db
         .collection('cartItems')
-        .doc(/${userId}/)
+        .doc(`/${userId}/`)
         .collection('items')
-        .doc(/${productId}/)
+        .doc(`/${productId}/`)
         .update({ quantity });
       return res.status(200).send({ success: true, data: updatedItem });  
     } else {
@@ -82,9 +82,9 @@ router.post('/addToCart/:userId', async (req, res) => {
       };
       const addItem = await db
         .collection('cartItems')
-        .doc(/${userId}/)
+        .doc(`/${userId}/`)
         .collection('items')
-        .doc(/${productId}/)
+        .doc(`/${productId}/`)
         .set(data);
       return res.status(200).send({ success: true, data: addItem });  
     }
@@ -103,9 +103,9 @@ router.put('/updateCart/:user_id', async (req, res) => {
   try {
     const doc = await db
       .collection('cartItems')
-      .doc(/${userId}/)
+      .doc(`/${userId}/`)
       .collection('items')
-      .doc(/${productId}/)
+      .doc(`/${productId}/`)
       .get();
 
     if (doc.exists) {
@@ -113,27 +113,27 @@ router.put('/updateCart/:user_id', async (req, res) => {
         const quantity = doc.data().quantity + 1;
         const updatedItem = await db
           .collection('cartItems')
-          .doc(/${userId}/)
+          .doc(`/${userId}/`)
           .collection('items')
-          .doc(/${productId}/)
+          .doc(`/${productId}/`)
           .update({ quantity });
         return res.status(200).send({ success: true, data: updatedItem });
       } else {
         if (doc.data().quantity === 1) {
           const deleteItem = await db
             .collection('cartItems')
-            .doc(/${userId}/)
+            .doc(`/${userId}/`)
             .collection('items')
-            .doc(/${productId}/)
+            .doc(`/${productId}/`)
             .delete();
           return res.status(200).send({ success: true, data: deleteItem });
         } else {
           const quantity = doc.data().quantity - 1;
           const updatedItem = await db
             .collection('cartItems')
-            .doc(/${userId}/)
+            .doc(`/${userId}/`)
             .collection('items')
-            .doc(/${productId}/)
+            .doc(`/${productId}/`)
             .update({ quantity });
           return res.status(200).send({ success: true, data: updatedItem });
         }
@@ -151,7 +151,7 @@ router.get('/getCartItems/:user_id', async (req, res) => {
   try {
     const query = db
       .collection('cartItems')
-      .doc(/${userId}/)
+      .doc(`/${userId}/`)
       .collection('items');
 
     const querysnap = await query.get();
@@ -164,25 +164,39 @@ router.get('/getCartItems/:user_id', async (req, res) => {
 });
 
 router.post('/create-checkout-session', async (req, res) => {
-  const sesion = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: 'T-shirt',
-          },
-          unit_amount: 2000,
-        },
-        quantity: 1,
-      },
-    ],
-    mode: 'payment',
-    success_url: `${process.env.CLIENT_URL}/checkout-success`,
-    cancel_url: `${process.env.CLIENT_URL}/`,
-  });
-  res.send({ url: sesion.url });
-});
+  try {
+    const { cartItems } = req.body;
 
+    if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+      return res.status(400).json({ error: 'No items in cart' });
+    }
+
+    const line_items = cartItems.map((item) => ({
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name: item.product_name,
+          images: [item.product_image], // opcional
+        },
+        unit_amount: Math.round(item.product_price * 100), // en centavos
+      },
+      quantity: item.quantity,
+    }));
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items,
+      mode: 'payment',
+      success_url: `${process.env.CLIENT_URL}/checkout-success`,
+      cancel_url: `${process.env.CLIENT_URL}/`,
+    });
+
+    res.status(200).json({ url: session.url });
+
+  } catch (err) {
+    console.error('Stripe session error:', err);
+    res.status(500).json({ error: 'Failed to create Stripe session' });
+  }
+});
 
 module.exports = router;

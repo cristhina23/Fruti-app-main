@@ -68,7 +68,9 @@ const Header = () => {
           <>
             <div className='relative cursor-pointer  ' onMouseEnter={() => setIsMenu(true)}>
               <div className='w-8 h-8 ml-6 rounded-full shadow-md cursor-pointer overflow-hidden flex items-center justify-center'>
-                <motion.img className='w-full h-full object-cover' src={user?.picture ? user?.picture : Avatar} whileHover={{ scale: 1.15 }} alt='user-avatar' />
+                <img 
+                referrerPolicy="no-referrer"
+                className='w-full h-full object-cover' src={user?.picture ? user?.picture : Avatar} whileHover={{ scale: 1.15 }} alt='user-avatar' />
               </div>
             {isMenu && (
               <motion.div 

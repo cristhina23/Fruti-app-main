@@ -18,7 +18,7 @@ router.post('/create', async (req, res) => {
     const response = await db.collection('products').doc(`${id}`).set(data);
     return res.status(200).json({success: true, data: response});
   } catch (err) {
-    return res.send({ success: false, msg: `Error in creating the product: ${err}` });
+    return res.status(500).send({success: false, msg: `Error in creating the product: ${err}`});
   }
 
 });
@@ -35,7 +35,7 @@ router.post('/create', async (req, res) => {
 
     return res.status(200).json({ success: true, data: products });
   } catch (err) {
-    return res.status(500).json({ success: false, msg: `Error getting products: ${err}` });
+    return res.send({ success: false, msg: `Error in getting the products: ${err}` });
   }
 });
 
@@ -47,7 +47,7 @@ router.delete('/delete/:id', async (req, res) => {
       return res.status(200).json({ success: true, data: result });
     });
   } catch (err) {
-    return res.send({ success: false, msg: `Error in deleting the product: ${err}` });
+    return res.send({ success: false, msg:` Error in deleting the product: ${err}` });
   }
 });
 
@@ -57,18 +57,18 @@ router.post('/addToCart/:userId', async (req, res) => {
   try {
     const doc = await db
     .collection('cartItems')
-    .doc(`/${userId}/`)
+    .doc(/${userId}/)
     .collection('items')
-    .doc(`/${productId}/`)
+    .doc(/${productId}/)
     .get();
 
     if (doc.exists) {
       const quantity = doc.data().quantity + 1;
       const updatedItem = await db
         .collection('cartItems')
-        .doc(`/${userId}/`)
+        .doc(/${userId}/)
         .collection('items')
-        .doc(`/${productId}/`)
+        .doc(/${productId}/)
         .update({ quantity });
       return res.status(200).send({ success: true, data: updatedItem });  
     } else {
@@ -82,15 +82,15 @@ router.post('/addToCart/:userId', async (req, res) => {
       };
       const addItem = await db
         .collection('cartItems')
-        .doc(`/${userId}/`)
+        .doc(/${userId}/)
         .collection('items')
-        .doc(`/${productId}/`)
+        .doc(/${productId}/)
         .set(data);
       return res.status(200).send({ success: true, data: addItem });  
     }
    
   } catch (err) {
-    return res.send({ success: false, msg: `Error in adding to cart: ${err}` });
+    return res.send({ success: false, msg: `Error in adding to the cart: ${err}` });
   }
 });
 
@@ -103,9 +103,9 @@ router.put('/updateCart/:user_id', async (req, res) => {
   try {
     const doc = await db
       .collection('cartItems')
-      .doc(`/${userId}/`)
+      .doc(/${userId}/)
       .collection('items')
-      .doc(`/${productId}/`)
+      .doc(/${productId}/)
       .get();
 
     if (doc.exists) {
@@ -113,27 +113,27 @@ router.put('/updateCart/:user_id', async (req, res) => {
         const quantity = doc.data().quantity + 1;
         const updatedItem = await db
           .collection('cartItems')
-          .doc(`/${userId}/`)
+          .doc(/${userId}/)
           .collection('items')
-          .doc(`/${productId}/`)
+          .doc(/${productId}/)
           .update({ quantity });
         return res.status(200).send({ success: true, data: updatedItem });
       } else {
         if (doc.data().quantity === 1) {
           const deleteItem = await db
             .collection('cartItems')
-            .doc(`/${userId}/`)
+            .doc(/${userId}/)
             .collection('items')
-            .doc(`/${productId}/`)
+            .doc(/${productId}/)
             .delete();
           return res.status(200).send({ success: true, data: deleteItem });
         } else {
           const quantity = doc.data().quantity - 1;
           const updatedItem = await db
             .collection('cartItems')
-            .doc(`/${userId}/`)
+            .doc(/${userId}/)
             .collection('items')
-            .doc(`/${productId}/`)
+            .doc(/${productId}/)
             .update({ quantity });
           return res.status(200).send({ success: true, data: updatedItem });
         }
@@ -151,7 +151,7 @@ router.get('/getCartItems/:user_id', async (req, res) => {
   try {
     const query = db
       .collection('cartItems')
-      .doc(`/${userId}/`)
+      .doc(/${userId}/)
       .collection('items');
 
     const querysnap = await query.get();
@@ -159,7 +159,7 @@ router.get('/getCartItems/:user_id', async (req, res) => {
 
     return res.status(200).send({ success: true, data: response });
   } catch (err) {
-    return res.send({ success: false, msg: `Error in getting cart items: ${err}` });
+    return res.send({ success: false, msg: `Error in getting the cart items: ${err}` });
   }
 });
 
@@ -178,8 +178,8 @@ router.post('/create-checkout-session', async (req, res) => {
       },
     ],
     mode: 'payment',
-    success_url: 'http://localhost:3000/success',
-    cancel_url: 'http://localhost:3000/cancel',
+    success_url: `${process.env.CLIENT_URL}/checkout-success`,
+    cancel_url: `${process.env.CLIENT_URL}/`,
   });
   res.send({ url: sesion.url });
 });

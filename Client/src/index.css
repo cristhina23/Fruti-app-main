@@ -21,5 +21,28 @@ html, body {
   width: 100%;
 }
 
+/* Scrollbar naranja personalizado */
+.scrollbar-custom::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color: #f97316; 
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* Para Firefox */
+.scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-color: #f97316 transparent;
+}
+
+
 
 

@@ -77,3 +77,18 @@ export const getAllCartItems = async (user_id) => {
     return null;
   }
 }
+
+//  Cart Increment/Decrement Function
+export const updateCartItem = async (user_id, productId, type) => {
+  try {
+    const res = await axios.put(
+      `${baseURL}/api/products/updateCart/${user_id}`,
+      { productId, type } // Se envía en el cuerpo de la petición
+    );
+
+    return res.data.data;
+  } catch (error) {
+    console.error("Error al actualizar el carrito:", error);
+    return null;
+  }
+};

@@ -18,6 +18,7 @@ import Dashboard from './containers/Dashboard';
 import { getAllProducts } from './api';
 import { setAllProducts } from './context/actions/productActions';
 import { setCartItems } from './context/actions/cartActions';
+import CheckOutSuccess from './components/CheckOutSuccess';
 
 
 
@@ -78,6 +79,7 @@ useEffect(() => {
         <Route path="/*" element={<MainContainer />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path='/checkout-success' element={<CheckOutSuccess />} />
       </Routes>
       
       {alert?.type && <Alert type={alert?.type} message={alert?.message} />}

@@ -21,4 +21,5 @@ export { default as SliderCard } from '../components/SliderCard';
 export { default as FilterSection } from '../components/FilterSection';
 export { default as Cart } from '../components/Cart';
 export { default as CheckOutSuccess } from '../components/CheckOutSuccess';
+export { default as Footer } from '../components/Footer';
 

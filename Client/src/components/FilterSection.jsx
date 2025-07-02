@@ -21,10 +21,10 @@ const FilterSection = () => {
         </div>
       </div>
 
-      <div className='w-full overflow-x-scroll pt-6 flex items-center justify-center gap-6 py-8'>
+      <div className='w-full  pt-6 flex items-center justify-center gap-6 py-8'>
         {statuses && statuses.map((data, i) => (
           <FilterCard
-            key={data.category} // ✅ clave única por categoría
+            key={data.category} 
             data={data}
             index={i}
             category={category}

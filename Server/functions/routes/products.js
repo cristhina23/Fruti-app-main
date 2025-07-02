@@ -164,6 +164,8 @@ router.get('/getCartItems/:user_id', async (req, res) => {
 });
 
 router.post('/create-checkout-session', async (req, res) => {
+
+  
   try {
     const { cartItems } = req.body;
 
@@ -184,12 +186,34 @@ router.post('/create-checkout-session', async (req, res) => {
     }));
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items,
-      mode: 'payment',
-      success_url: `${process.env.CLIENT_URL}/checkout-success`,
-      cancel_url: `${process.env.CLIENT_URL}/`,
-    });
+  payment_method_types: ['card'],
+  shipping_address_collection: {
+    allowed_countries: ['US'],
+  },
+  shipping_options: [
+    {
+      shipping_rate_data: {
+        type: 'fixed_amount',
+        fixed_amount: {
+          amount: 0,
+          currency: 'usd',
+        },
+        display_name: 'Free shipping',
+        delivery_estimate: {
+          minimum: { unit: 'business_day', value: 5 },
+          maximum: { unit: 'business_day', value: 7 },
+        },
+      },
+    },
+  ],
+  phone_number_collection: {
+    enabled: true,
+  },
+  line_items, // asegúrate que tus items tienen price_data o un id de precio
+  mode: 'payment',
+  success_url: `${process.env.CLIENT_URL}/checkout-success`,
+  cancel_url: `${process.env.CLIENT_URL}/`,
+});
 
     res.status(200).json({ url: session.url });
 

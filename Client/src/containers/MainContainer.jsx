@@ -6,6 +6,7 @@ import  FilterSection  from '../components/FilterSection'
 import { useSelector } from 'react-redux'
 import Cart from '../components/Cart'
 import  Footer  from '../components/Footer'
+import  TopCategories  from '../components/TopCategories'
 
 const MainContainer = () => {
   const isCart = useSelector((state) => state.isCart);
@@ -13,10 +14,11 @@ const MainContainer = () => {
     <>
     <main className='w-screen min-h-screen flex items-start justify-center flex-col bg-primary'>
       <Header />
-      <div className='w-full flex flex-col items-start justify-center sm:mt-10 md:mt-24 px-6 md:px-24 2xl:px-96 pb-24'>
+      <div className='w-full flex flex-col items-start justify-center sm:mt-10 md:mt-24 px-6 md:px-24 xl:px-16 2xl:px-20 pb-24' id='home'>
         <Home />
         <HomeSlider />
         <FilterSection />
+        < TopCategories />
       </div>
 
       {isCart && <Cart />}

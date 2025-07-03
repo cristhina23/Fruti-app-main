@@ -22,4 +22,5 @@ export { default as FilterSection } from '../components/FilterSection';
 export { default as Cart } from '../components/Cart';
 export { default as CheckOutSuccess } from '../components/CheckOutSuccess';
 export { default as Footer } from '../components/Footer';
+export { default as TopCategories } from '../components/TopCategories';
 

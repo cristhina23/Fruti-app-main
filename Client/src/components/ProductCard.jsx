@@ -29,9 +29,9 @@ function ProductCard({ grid = 3, product = {} }) {
         {/* Wishlist */}
         <div className="absolute top-3 right-3 z-10 cursor-pointer" onClick={() => setIsWished(!isWished)}>
           {isWished ? (
-            <FaHeart className="text-orange-600 text-2xl" />
+            <FaHeart className="text-red-600 text-2xl" />
           ) : (
-            <FiHeart className="text-orange-600 text-2xl" />
+            <FiHeart className="text-red-600 text-2xl" />
           )}
         </div>
 
@@ -58,19 +58,19 @@ function ProductCard({ grid = 3, product = {} }) {
         {/* Botones flotantes */}
         <div className="absolute top-[15%] -right-10 group-hover:right-2 transition-all duration-300 flex flex-col gap-3">
           <button
-            className="bg-orange-500 w-10 h-10 flex items-center justify-center rounded-full"
+            className="bg-red-500 w-10 h-10 flex items-center justify-center rounded-full"
             onClick={() => navigate(`/product/${product?.productId}`)}
           >
             <img src={Prodcompare} alt="compare" className="w-6 h-6" />
           </button>
           <button
-            className="bg-orange-500 w-10 h-10 flex items-center justify-center rounded-full"
+            className="bg-red-500 w-10 h-10 flex items-center justify-center rounded-full"
             onClick={() => setShowModal(true)}
           >
             <img src={View} alt="view" className="w-6 h-6" />
           </button>
           <button
-            className="bg-orange-500 w-10 h-10 flex items-center justify-center rounded-full"
+            className="bg-red-500 w-10 h-10 flex items-center justify-center rounded-full"
             onClick={addToCart}
           >
             <img src={Addcart} alt="add to cart" className="w-6 h-6" />
@@ -80,7 +80,7 @@ function ProductCard({ grid = 3, product = {} }) {
         {/* Botón Agregar */}
         <button
           onClick={addToCart}
-          className="mt-3 mx-4 mb-4 bg-orange-500 text-white py-2 rounded-md shadow hover:bg-orange-600 transition-all"
+          className="mt-3 mx-4 mb-4 bg-red-500 text-white py-2 rounded-md shadow hover:bg-red-600 transition-all"
         >
           Agregar al carrito
         </button>
@@ -111,6 +111,7 @@ function ProductCard({ grid = 3, product = {} }) {
               <img
                 src={product?.product_image}
                 alt={product?.product_name}
+                loading='lazy'
                 className="w-48 h-48 object-contain mb-4"
               />
               <h3 className="text-lg font-bold text-gray-800 mb-2">
@@ -121,7 +122,7 @@ function ProductCard({ grid = 3, product = {} }) {
               </p>
               <button
                 onClick={() => navigate(`/product/${product?.productId}`)}
-                className="bg-orange-500 text-white px-4 py-2 rounded-md shadow hover:bg-orange-600 transition"
+                className="bg-red-500 text-white px-4 py-2 rounded-md shadow hover:bg-red-600 transition"
               >
                 Comprar
               </button>

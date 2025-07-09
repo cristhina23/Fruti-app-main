@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import Cart from '../components/Cart'
 import  Footer  from '../components/Footer'
 import  TopCategories  from '../components/TopCategories'
+import Newsletter from '../components/NewsLetter'
 
 const MainContainer = () => {
   const isCart = useSelector((state) => state.isCart);
@@ -19,8 +20,9 @@ const MainContainer = () => {
         <HomeSlider />
         <FilterSection />
         < TopCategories />
+       
       </div>
-
+       <Newsletter />
       {isCart && <Cart />}
     </main>
 

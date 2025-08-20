@@ -77,7 +77,7 @@ const Header = () => {
                 
                 onMouseLeave={() => setIsMenu(false)}
                 className='px-6 py-4 w-38 bg-lightOverlay backdrop-blur-md rounded-md shadow-md absolute top-12 right-0 flex flex-col justify-center items-center gap-4'>
-              {user?.email === "admin@miapp.com" && (
+              {user && (
                 <Link 
                 to='/dashboard/home'
                 className='hover:text-red-500 text-sm text-textColor'

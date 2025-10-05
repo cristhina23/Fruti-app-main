@@ -18,7 +18,7 @@ admin.initializeApp({
 
 // Rutas base
 app.get("/", (req, res) => {
-  res.send("🚀 Backend funcionando correctamente en Render!");
+  res.send("🚀 Backend working!");
 });
 
 // Rutas importadas
